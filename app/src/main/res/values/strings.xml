@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Trackmpa</string>
+    <string name="trackservice">Track service</string>
+
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->

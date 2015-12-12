@@ -15,6 +15,9 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.security.PublicKey;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -92,11 +95,35 @@ public class LocationService extends Service implements LocationListener {
         if ("".equals(phoneNumber))
             return;
         SmsManager smsManager = SmsManager.getDefault();
+        String message = generateMessage(location);
+
         smsManager.sendTextMessage(phoneNumber, null, generateMessage(location), null, null);
     }
 
     private String generateMessage(Location location) {
-        return String.format("Lat: %s, Lng: %s", location.getLatitude(), location.getLongitude());
+        String message = String.format("Lat: %s, Lng: %s", location.getLatitude(), location.getLongitude());
+        if (requiresEncryption()) {
+            message = encryptedMessage(message);
+        }
+        return message;
+    }
+
+    private String encryptedMessage(String message) {
+        try {
+            FileInputStream fis = this.openFileInput("rsa.pub");
+            try {
+                PublicKey pk = PublicKeyReader.get(fis);
+                return new String(new RsaManager().encrypt(message, this));
+            } catch (Exception e) {
+                return message;
+            }
+        } catch (FileNotFoundException e) {
+            return message;
+        }
+    }
+
+    private boolean requiresEncryption() {
+        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean("encrypted_switch", false);
     }
 
     private boolean readTrackingPreference() {

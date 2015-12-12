@@ -26,6 +26,14 @@
             android:label="@string/trackservice"
             android:name=".LocationService">
         </service>
+        <activity
+            android:name=".QRApiScannerActivity"
+            android:label="@string/title_scan_public_key_qr"
+            android:parentActivityName=".SettingsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.vaslabs.trackmpa.SettingsActivity" />
+        </activity>
     </application>
 
 </manifest>

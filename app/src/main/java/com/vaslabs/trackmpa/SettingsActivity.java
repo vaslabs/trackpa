@@ -23,6 +23,7 @@ import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.security.PublicKey;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -50,14 +51,37 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             }else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
-                preference.setSummary(stringValue);
                 if ("track_switch".equals(preference.getKey())) {
                     manageTracking(stringValue, preference.getContext());
+                } else if ("encrypt_switch".equals(preference.getKey())) {
+                    manageEncryption(stringValue, preference);
+                } else {
+                    preference.setSummary(stringValue);
                 }
             }
             return true;
         }
     };
+
+    private static void manageEncryption(String value, Preference preference) {
+        boolean requiresEncryption = Boolean.valueOf(value);
+        if (requiresEncryption) {
+            if (!hasValidPublicKey(preference.getContext())) {
+                Intent intent = new Intent(preference.getContext(), QRApiScannerActivity.class);
+                preference.getContext().startActivity(intent);
+            }
+        }
+    }
+
+    private static boolean hasValidPublicKey(Context context) {
+        try {
+            RsaManager rsaManager = new RsaManager();
+            PublicKey pk = rsaManager.getRemotePublicKey(context);
+            return pk != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     private static void manageTracking(String stringValue, Context context) {
         boolean value = Boolean.valueOf(stringValue);
@@ -191,6 +215,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("sync_frequency"), DEFAULT_SYNC);
+            bindPreferenceSummaryToValue(findPreference("encrypt_switch"), false);
+
         }
 
         @Override

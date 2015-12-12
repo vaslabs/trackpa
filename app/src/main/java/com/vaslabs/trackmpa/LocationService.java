@@ -20,6 +20,8 @@ import java.io.FileNotFoundException;
 import java.security.PublicKey;
 import java.util.concurrent.TimeUnit;
 
+import static com.vaslabs.trackmpa.SmsHandler.sendLocationSms;
+
 /**
  * Created by vnicolaou on 12/12/15.
  */
@@ -83,47 +85,10 @@ public class LocationService extends Service implements LocationListener {
     public void onLocationChanged(Location location) {
         boolean isTrackingEnabled = readTrackingPreference();
         if (isTrackingEnabled) {
-            sendLocationSms(location);
+            sendLocationSms(this, location);
         } else {
             this.stopSelf();
         }
-    }
-
-    private void sendLocationSms(Location location) {
-        String phoneNumber = getPhoneNumber();
-        Log.i("LocationService", "Got phone number: " + phoneNumber);
-        if ("".equals(phoneNumber))
-            return;
-        SmsManager smsManager = SmsManager.getDefault();
-        String message = generateMessage(location);
-
-        smsManager.sendTextMessage(phoneNumber, null, generateMessage(location), null, null);
-    }
-
-    private String generateMessage(Location location) {
-        String message = String.format("Lat: %s, Lng: %s", location.getLatitude(), location.getLongitude());
-        if (requiresEncryption()) {
-            message = encryptedMessage(message);
-        }
-        return message;
-    }
-
-    private String encryptedMessage(String message) {
-        try {
-            FileInputStream fis = this.openFileInput("rsa.pub");
-            try {
-                PublicKey pk = PublicKeyReader.get(fis);
-                return new String(new RsaManager().encrypt(message, this));
-            } catch (Exception e) {
-                return message;
-            }
-        } catch (FileNotFoundException e) {
-            return message;
-        }
-    }
-
-    private boolean requiresEncryption() {
-        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean("encrypted_switch", false);
     }
 
     private boolean readTrackingPreference() {
@@ -145,7 +110,4 @@ public class LocationService extends Service implements LocationListener {
 
     }
 
-    public String getPhoneNumber() {
-        return PreferenceManager.getDefaultSharedPreferences(this).getString("phone_number", "");
-    }
 }

@@ -1,23 +1,16 @@
 package com.vaslabs.trackmpa;
 
 import android.location.Location;
-import android.preference.PreferenceManager;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
 import org.mockito.Mockito;
 
-import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 
 /**

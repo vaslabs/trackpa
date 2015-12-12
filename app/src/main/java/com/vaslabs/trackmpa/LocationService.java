@@ -11,13 +11,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.security.PublicKey;
 import java.util.concurrent.TimeUnit;
 
 import static com.vaslabs.trackmpa.SmsHandler.sendLocationSms;

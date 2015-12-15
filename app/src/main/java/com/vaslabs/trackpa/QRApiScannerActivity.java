@@ -1,4 +1,4 @@
-package com.vaslabs.trackmpa;
+package com.vaslabs.trackpa;
 
 import android.app.Activity;
 import android.content.Context;

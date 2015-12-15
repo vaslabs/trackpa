@@ -1,4 +1,4 @@
-package com.vaslabs.trackmpa;
+package com.vaslabs.trackpa;
 
 import android.content.Context;
 import java.io.FileOutputStream;

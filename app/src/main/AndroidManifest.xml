@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.vaslabs.trackmpa">
+    package="com.vaslabs.trackpa">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.vaslabs.trackpa.SettingsActivity"
             android:label="@string/title_activity_settings"
             >
             <intent-filter>
@@ -24,15 +24,15 @@
         <service android:enabled="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/trackservice"
-            android:name=".LocationService">
+            android:name="com.vaslabs.trackpa.LocationService">
         </service>
         <activity
-            android:name=".QRApiScannerActivity"
+            android:name="com.vaslabs.trackpa.QRApiScannerActivity"
             android:label="@string/title_scan_public_key_qr"
-            android:parentActivityName=".SettingsActivity" >
+            android:parentActivityName="com.vaslabs.trackpa.SettingsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.vaslabs.trackmpa.SettingsActivity" />
+                android:value="com.vaslabs.trackpa.SettingsActivity" />
         </activity>
     </application>
 

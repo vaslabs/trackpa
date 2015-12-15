@@ -1,4 +1,4 @@
-package com.vaslabs.trackmpa;
+package com.vaslabs.trackpa;
 
 import android.content.Context;
 import android.location.Location;
@@ -43,8 +43,6 @@ public class SmsHandler {
             try {
                 message = Base64.encodeToString(encryptedMessage(context, message), Base64.DEFAULT);
                 message = message.replaceAll("\n", "");
-                message = URLEncoder.encode(message, "UTF-8");
-
             } catch (Exception e) {
                 Log.i("Encryption", "Error encrypting message: " + e.toString());
                 Toast.makeText(context, "Encryption failed: sending raw message.", Toast.LENGTH_SHORT).show();

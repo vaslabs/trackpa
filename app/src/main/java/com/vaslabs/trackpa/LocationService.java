@@ -1,4 +1,4 @@
-package com.vaslabs.trackmpa;
+package com.vaslabs.trackpa;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.vaslabs.trackmpa.SmsHandler.sendLocationSms;
+import static com.vaslabs.trackpa.SmsHandler.sendLocationSms;
 
 /**
  * Created by vnicolaou on 12/12/15.
@@ -24,6 +24,7 @@ import static com.vaslabs.trackmpa.SmsHandler.sendLocationSms;
 public class LocationService extends Service implements LocationListener {
 
     private static final String LOCATION_PROVIDER = LocationManager.GPS_PROVIDER;
+    private static final String NETWORK_PROVIDER = LocationManager.NETWORK_PROVIDER;
 
     @Nullable
     @Override
@@ -36,9 +37,9 @@ public class LocationService extends Service implements LocationListener {
 
     Intent intent = null;
     PendingIntent smsIntent = null;
+
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
         Log.i("LocationService", "created");
     }
@@ -54,12 +55,15 @@ public class LocationService extends Service implements LocationListener {
 
     private void initLocationManager(Context context) {
         long wakeUpTime = getWakeUpTime(this);
-                locationManager = (LocationManager)(context.getSystemService(Context.LOCATION_SERVICE));
+        wakeUpTime = TimeUnit.MILLISECONDS.convert(wakeUpTime, TimeUnit.MINUTES);
+        locationManager = (LocationManager) (context.getSystemService(Context.LOCATION_SERVICE));
         if (locationManager == null) {
             Toast.makeText(context, "Please enable gps", Toast.LENGTH_LONG).show();
             return;
         }
-        locationManager.requestLocationUpdates(LOCATION_PROVIDER, TimeUnit.MILLISECONDS.convert(wakeUpTime, TimeUnit.MINUTES), 10f, this);
+        locationManager.requestLocationUpdates(LOCATION_PROVIDER, wakeUpTime, 10f, this);
+        locationManager.requestLocationUpdates(NETWORK_PROVIDER,
+                wakeUpTime, 10, this);
 
     }
 
@@ -83,6 +87,7 @@ public class LocationService extends Service implements LocationListener {
         if (isTrackingEnabled) {
             sendLocationSms(this, location);
         } else {
+            Log.i("LocationService", "Stopping...");
             this.stopSelf();
         }
     }

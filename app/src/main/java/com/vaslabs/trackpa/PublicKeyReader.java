@@ -18,7 +18,12 @@ public class PublicKeyReader {
                 throws Exception {
 
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-            String base64 = br.readLine();
+            String line;
+            StringBuilder sb = new StringBuilder(256);
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            String base64 = sb.toString();
             byte[] keyBytes = Base64.decode(base64, Base64.DEFAULT);
             X509EncodedKeySpec spec =
                     new X509EncodedKeySpec(keyBytes);

@@ -4,39 +4,34 @@ import android.location.Location;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
+import com.vaslabs.trackpa.EncryptionTest;
+import com.vaslabs.trackpa.RsaManager;
+import com.vaslabs.trackpa.SmsHandler;
+
 import org.mockito.Mockito;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 
-
 /**
- * Created by vnicolaou on 12/12/15.
+ * Created by vnicolaou on 09/01/16.
  */
-public class EncryptionTest extends AndroidTestCase{
-    RsaManager rsaManager;
+public class EncryptionTestWithUserSettings extends AndroidTestCase{
 
-    protected PublicKey remotePublicKey;
+    private PublicKey remotePublicKey;
 
-    PrivateKey remotePrivateKey;
-
-
-    public void setUp() throws NoSuchAlgorithmException {
+    @Override
+    public void setUp() {
+        RsaManager rsaManager = new RsaManager();
         System.setProperty("dexmaker.dexcache", this.mContext.getCacheDir().toString());
-        rsaManager = new RsaManager();
-        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-        kpg.initialize(2048);
-        KeyPair kp = kpg.genKeyPair();
-        remotePrivateKey = kp.getPrivate();
-        remotePublicKey = kp.getPublic();
+        try {
+            remotePublicKey = rsaManager.getRemotePublicKey(this.getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.toString());
+        }
     }
 
-
-    public void test_send_encrypted_message() {
-        //before running this test, enable encryption
+    public void test_send_sms() {
         Location location = Mockito.mock(Location.class);
         Mockito.when(location.getLatitude()).thenReturn(32.12321);
         Mockito.when(location.getLongitude()).thenReturn(-2.13121);
@@ -48,5 +43,4 @@ public class EncryptionTest extends AndroidTestCase{
 
         SmsHandler.sendLocationSms(this.getContext(), location);
     }
-
 }

@@ -9,7 +9,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.FileInputStream;
-import java.net.URLEncoder;
 import java.security.PublicKey;
 import java.util.ArrayList;
 

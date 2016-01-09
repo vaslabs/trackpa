@@ -47,7 +47,9 @@ public class QRApiScannerActivity extends Activity {
                             .commit();
                 } catch (IOException e) {
                     Toast.makeText(mContext, "Something went wrong: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-
+                    PreferenceManager.getDefaultSharedPreferences(
+                            mContext).edit().putBoolean("encrypt_switch", false)
+                            .commit();
                     finish();
                 }
                 return true;
